@@ -1,5 +1,14 @@
 ---
 const pageTitle = "Обо мне";
+
+const identity = {
+  firstName: "Сара",
+  country: "Канада",
+  occupation: "Технический писатель",
+  hobbies: ["фотография", "наблюдение за птицами", "бейсбол"],
+};
+
+const skills = ["HTML", "CSS", "JavaScript", "React", "Astro", "Написание документации"];
 ---
 
 <html lang="ru">
@@ -15,5 +24,17 @@ const pageTitle = "Обо мне";
     <a href="/about/">О сайте</a>
     <a href="/blog/">Блог</a>
     <h1>{pageTitle}</h1>
+    <p>Несколько фактов обо мне:</p>
+<ul>
+  <li>Меня зовут {identity.firstName}.</li>
+  <li>Моя страна — {identity.country}, а род занятий — {identity.occupation}.</li>
+  {identity.hobbies.length >= 2 &&
+    <li>Два моих увлечения: {identity.hobbies[0]} и {identity.hobbies[1]}</li>
+  }
+</ul>
+<p>Мои навыки:</p>
+<ul>
+  {skills.map((skill) => <li>{skill}</li>)}
+</ul>
   </body>
 </html>
