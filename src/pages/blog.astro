@@ -1,6 +1,7 @@
 ---
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import "../scripts/menu.js";
 import './styles/global.css';
 const pageTitle = "БЛОГ";
 ---
@@ -22,10 +23,6 @@ const pageTitle = "БЛОГ";
       <li><a href="/posts/post-3/">Пост 3</a></li>
     </ul>
     <Footer />
-    <script is:inline>
-      document.querySelector('.hamburger').addEventListener('click', () => {
-        document.querySelector('.nav-links').classList.toggle('expanded');
-      });
-    </script>
+      </script>
   </body>
 </html>

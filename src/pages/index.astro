@@ -1,4 +1,5 @@
 ---
+import "../scripts/menu.js";
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import './styles/global.css';
@@ -17,10 +18,5 @@ const pageTitle = "Главная";
     <Header />
     <h1>Astro</h1>
     <Footer />
-    <script is:inline>
-      document.querySelector('.hamburger').addEventListener('click', () => {
-        document.querySelector('.nav-links').classList.toggle('expanded');
-      });
-    </script>
-  </body>
+    </body>
 </html>
