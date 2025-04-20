@@ -17,7 +17,7 @@ const pageTitle = "Главная";
     <Header />
     <h1>Astro</h1>
     <Footer />
-    <script>
+    <script is:inline>
       document.querySelector('.hamburger').addEventListener('click', () => {
         document.querySelector('.nav-links').classList.toggle('expanded');
       });

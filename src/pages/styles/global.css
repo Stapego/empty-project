@@ -20,6 +20,7 @@ html {
     font-size: 2.5rem;
   }
   /* стили для навигации */
+  
   .hamburger {
     padding-right: 20px;
     cursor: pointer;
@@ -74,7 +75,7 @@ html {
     display: inline-block;
     padding: 15px 20px;
   }
-  
+
   .hamburger {
     display: none;
   }
