@@ -1,5 +1,6 @@
 ---
 import Navigation from '../components/Navigation.astro';
+import Footer from '../components/Footer.astro';
 import './styles/global.css';
 const pageTitle = "Обо мне";
 const identity = {
@@ -58,6 +59,6 @@ const textCase = "uppercase"
 {finished && <p>Я завершил(а) это руководство!</p>}
 
 {goal === 3 ? <p>Моя цель — завершить за 3 дня.</p> : <p>Моя цель — не 3 дня.</p>}
-
+<Footer />
   </body>
 </html>
