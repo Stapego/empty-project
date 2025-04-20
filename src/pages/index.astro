@@ -1,10 +1,10 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import "../scripts/menu.js";
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import './styles/global.css';
 const pageTitle = "Главная";
 ---
-<BaseLayout>
-  <h2>Мой потрясающий подзаголовок блога</h2>
-</BaseLayout>
 
 <html lang="ru">
   <head>
@@ -15,9 +15,9 @@ const pageTitle = "Главная";
     <title>{pageTitle}</title>
   </head>
   <body>
+    <Header />
     <h1>Astro</h1>
-    <script>
-      import "../scripts/menu.js";
-    </script>
+    <Footer />
+    <script></script>
     </body>
 </html>
