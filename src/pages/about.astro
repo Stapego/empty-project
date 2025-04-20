@@ -60,5 +60,10 @@ const textCase = "uppercase"
 
 {goal === 3 ? <p>Моя цель — завершить за 3 дня.</p> : <p>Моя цель — не 3 дня.</p>}
 <Footer />
+<script is:inline>
+  document.querySelector('.hamburger').addEventListener('click', () => {
+    document.querySelector('.nav-links').classList.toggle('expanded');
+  });
+</script>
   </body>
 </html>
