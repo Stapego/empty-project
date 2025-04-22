@@ -1,8 +1,7 @@
 ---
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import '../scripts/menu.js';
-const pageTitle = "Главная";
+const { pageTitle } = Astro.props;
 ---
 <html lang="ru">
   <head>
