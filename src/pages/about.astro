@@ -17,17 +17,8 @@ const skillColor = "navy";
 const fontWeight = "700";
 const textCase = "uppercase"
 ---
-
-
-
-
-<html lang="ru">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} >
-      </head>
+<BaseLayout>
+  <h2>Мой потрясающий подзаголовок блога</h2>
   <body>
     <style define:vars={{skillColor, fontWeight, textCase}}>
       h1 {
@@ -59,9 +50,4 @@ const textCase = "uppercase"
 
 {goal === 3 ? <p>Моя цель — завершить за 3 дня.</p> : <p>Моя цель — не 3 дня.</p>}
   </body>
-</html>
-
----
-<BaseLayout>
-  <h2>Мой потрясающий подзаголовок блога</h2>
 </BaseLayout>
