@@ -1,7 +1,4 @@
 ---
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import '../styles/global.css';
 import BaseLayout from '../layouts/BaseLayout.astro';
 const pageTitle = "Обо мне";
 const identity = {
@@ -20,9 +17,6 @@ const skillColor = "navy";
 const fontWeight = "700";
 const textCase = "uppercase"
 ---
-<BaseLayout>
-  <h2>Мой потрясающий подзаголовок блога</h2>
-</BaseLayout>
 
 
 
@@ -70,3 +64,8 @@ const textCase = "uppercase"
 </script>
   </body>
 </html>
+
+---
+<BaseLayout>
+  <h2>Мой потрясающий подзаголовок блога</h2>
+</BaseLayout>
