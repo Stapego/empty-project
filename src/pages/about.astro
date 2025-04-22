@@ -17,6 +17,9 @@ const skillColor = "navy";
 const fontWeight = "700";
 const textCase = "uppercase"
 ---
+<BaseLayout>
+  <h2>Мой потрясающий подзаголовок блога</h2>
+</BaseLayout>
 
 
 
@@ -26,7 +29,6 @@ const textCase = "uppercase"
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} >
-    <title>{pageTitle}</title>
     <style define:vars={{skillColor, fontWeight, textCase}}>
       h1 {
         color: purple;
@@ -59,13 +61,5 @@ const textCase = "uppercase"
 {finished && <p>Я завершил(а) это руководство!</p>}
 
 {goal === 3 ? <p>Моя цель — завершить за 3 дня.</p> : <p>Моя цель — не 3 дня.</p>}
-<script>
-  import "../scripts/menu.js";
-</script>
   </body>
 </html>
-
----
-<BaseLayout>
-  <h2>Мой потрясающий подзаголовок блога</h2>
-</BaseLayout>
