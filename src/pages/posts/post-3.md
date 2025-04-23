@@ -1,4 +1,5 @@
 ---
+layout: '../../layouts/MarkdownPostLayout.astro'
 title: Моя третья запись в блоге
 author: Ученик Astro
 description: "У меня были некоторые трудности, но обращение к сообществу за помощью действительно помогло!"
