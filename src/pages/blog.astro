@@ -1,11 +1,38 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro'
-const allPosts = Object.values(import.meta.glob('./posts/*.md', { eager: true }));
-const pageTitle = "Мой блог об изучении Astro"
+import BaseLayout from '../layouts/BaseLayout.astro';
+import type { MarkdownInstance } from 'astro';
+
+interface Post {
+  url: string;
+  frontmatter: {
+    title: string;
+    date?: string;
+    description?: string;
+  };
+}
+
+const allPosts = (Object.values(import.meta.glob<MarkdownInstance<Post>>('./posts/*.md', { eager: true })) as unknown as Post[]);
+
+// Сортировка по дате (новые → старые)
+const sortedPosts = allPosts.sort((a, b) => 
+  new Date(b.frontmatter.date || 0).getTime() - new Date(a.frontmatter.date || 0).getTime()
+);
+
+const pageTitle = "БЛОГ";
 ---
-<BaseLayout pageTitle={pageTitle}>
+
+<BaseLayout title={pageTitle}>
+  <h1>Мой блог об изучении Astro</h1>
   <p>Здесь я буду публиковать записи о своем пути изучения Astro.</p>
+
   <ul>
-    {allPosts.map((post) => <li><a href={post.url}>{post.frontmatter.title}</a></li>)}
+    {sortedPosts.map((post) => (
+      <li>
+        <a href={post.url}>{post.frontmatter.title}</a>
+        {post.frontmatter.date && (
+          <small>({new Date(post.frontmatter.date).toLocaleDateString('ru-RU')})</small>
+        )}
+      </li>
+    ))}
   </ul>
 </BaseLayout>
