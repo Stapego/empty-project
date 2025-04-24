@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import type { MarkdownInstance } from 'astro';
+import BlogPost from '../components/blogpost.astro';
 
 interface Post {
   url: string;
@@ -26,6 +27,7 @@ const pageTitle = "БЛОГ";
   <p>Здесь я буду публиковать записи о своем пути изучения Astro.</p>
 
   <ul>
+    {allPosts.map((post: any) => <BlogPost url={post.url} title={post.frontmatter.title} />)}
     {sortedPosts.map((post) => (
       <li>
         <a href={post.url}>{post.frontmatter.title}</a>
