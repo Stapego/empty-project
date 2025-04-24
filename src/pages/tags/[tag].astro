@@ -1,21 +1,89 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import type { MarkdownInstance } from 'astro';
+
+// Точный тип для frontmatter постов
+interface Frontmatter {
+  title: string;  // Обязательное поле
+  tags?: string[];
+  date?: string;
+  description?: string;
+  // Другие возможные поля frontmatter
+}
+
+interface Post extends MarkdownInstance<Frontmatter> {
+  url: string;
+  frontmatter: Frontmatter;
+}
 
 export async function getStaticPaths() {
-    const allPosts = Object.values(import.meta.glob('../posts/*.md', { eager: true }));
-  return [
-    { params: { tag: "astro" } },
-    { params: { tag: "успехи" } },
-    { params: { tag: "сообщество" } },
-    { params: { tag: "ведение блога" } },
-    { params: { tag: "неудачи" } },
-    { params: { tag: "обучение в открытом доступе" } },
-  ];
+  const postFiles = import.meta.glob<Post>('../posts/*.md', { eager: true });
+  const allPosts = Object.values(postFiles);
+
+  // Собираем все уникальные теги
+  const allTags = new Set<string>();
+  allPosts.forEach(post => {
+    post.frontmatter.tags?.forEach(tag => allTags.add(tag.toLowerCase().trim()));
+  });
+
+  return Array.from(allTags).map(tag => ({
+    params: { tag: tag },
+    props: {
+      posts: allPosts.filter(post => 
+        post.frontmatter.tags?.some(postTag => 
+          postTag.toLowerCase().trim() === tag.toLowerCase()
+        )
+      )
+    }
+  }));
 }
 
 const { tag } = Astro.params;
 const { posts } = Astro.props;
 ---
-<BaseLayout pageTitle={tag}>
-  <p>Посты с тегом {tag}</p>
+<BaseLayout pageTitle={`Посты с тегом: ${tag}`}>
+  <h1>Посты с тегом: #{tag}</h1>
+  
+  {posts.length > 0 ? (
+    <ul class="posts-list">
+      {posts.map(post => (
+        <li class="post-item">
+          <a href={post.url}>
+            <h2>{post.frontmatter.title}</h2>
+            {post.frontmatter.date && (
+              <time datetime={post.frontmatter.date}>
+                {new Date(post.frontmatter.date).toLocaleDateString('ru-RU')}
+              </time>
+            )}
+            {post.frontmatter.description && (
+              <p>{post.frontmatter.description}</p>
+            )}
+          </a>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p>Пока нет постов с тегом {tag}.</p>
+  )}
 </BaseLayout>
+
+<style>
+  .posts-list {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0;
+  }
+  .post-item {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border-left: 3px solid var(--theme-color);
+  }
+  .post-item h2 {
+    margin: 0 0 0.5rem 0;
+    color: var(--heading-color);
+  }
+  time {
+    color: var(--text-muted);
+    font-size: 0.9em;
+  }
+</style>
