@@ -1,8 +1,8 @@
 ---
 const props = Astro.props
-const { platform, github } = Astro.props;
+const { platform, username } = Astro.props;
 ---
-
+<a href={`https://www.${platform}.com/${username}`}>{platform}</a>
 <style>
   .social-link {
     display: inline-flex;
