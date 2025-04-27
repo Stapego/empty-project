@@ -2,11 +2,64 @@
 import Hamburger from './Hamburger.astro';
 import Navigation from './Navigation.astro';
 import ThemeIcon from './ThemeIcon.astro';
+const platform = "github";
+const username = "withastro";
+const props = Astro.props;
+import Social from './Social.astro';
 ---
+
+<style>
+  header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between; /* Распределяем элементы по ширине */
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: nowrap; /* Запрещаем перенос на новую строку */
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .social-links {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .social-icon-link {
+    display: inline-flex;
+    padding: 0.5rem;
+    color: white;
+    background-color: #4c1d95;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+    text-decoration: none;
+  }
+
+  .social-icon-link:hover {
+    background-color: #5b21b6;
+  }
+
+  .social-icon {
+    width: 16px; /* Чуть увеличил для лучшей читаемости */
+    height: 16px;
+  }
+</style>
+
 <header>
   <nav>
     <Hamburger />
     <ThemeIcon />
     <Navigation />
   </nav>
+  
+  <div class="social-links">
+    <Social platform="twitter" username="astrodotbuild" />
+    <Social platform="github" username="withastro" />
+    <Social platform="youtube" username="astrodotbuild" />
+  </div>
 </header>
