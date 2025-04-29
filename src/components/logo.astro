@@ -1,0 +1,17 @@
+---
+// src/components/Container.astro
+const { class: additionalClass } = Astro.props;
+---
+
+<style>
+  .container {
+    width: 100%;
+    max-width: var(--max-width, 1200px);
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+</style>
+
+<div class={`container ${additionalClass || ''}`}>
+  <slot />
+</div>

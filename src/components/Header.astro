@@ -6,6 +6,7 @@ const platform = "github";
 const username = "withastro";
 const props = Astro.props;
 import Social from './Social.astro';
+import Container from './';
 ---
 
 <style>
@@ -31,20 +32,14 @@ import Social from './Social.astro';
 </style>
 
 <header>
+  <div class="container">
+    <a class="logo" href="/"></a>
+    <img src="../components/logo.png" alt="Логотип" width="40" height="40" />
   <nav>
     <Hamburger />
     <Navigation />
   </nav>
-  <div class="logo">
-    <!-- Ваш логотип - можно использовать img или svg -->
-    <img src="/logo.svg" alt="Логотип" width="40" height="40" />
-    <!-- Или: -->
-    <!-- <svg class="logo" ...>...</svg> -->
-  </div>
-  <Social />
+   <Social />
     <ThemeIcon />
   </div>
-  <a href="/" class="logo">
-    <img src="../" alt="Логотип" width="40" height="40" />
-  </a>
-</header>
+  </header>
