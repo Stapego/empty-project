@@ -45,8 +45,7 @@ const { platform, username } = Astro.props;
 </a>
 <style>
   .social-link {
-    display: inline-flex;
-    align-items: center;
+    display: inline;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
     color: white;
@@ -54,6 +53,7 @@ const { platform, username } = Astro.props;
     text-decoration: none;
     border-radius: 0.775rem;
     transition: background-color 0.2s;
+    position: sticky;
   }
 
   .social-link:hover {
@@ -72,5 +72,6 @@ const { platform, username } = Astro.props;
     height: 16px;
     display: block;
     width: 30px;
+    position: sticky;
   }
 </style>

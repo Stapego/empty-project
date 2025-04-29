@@ -62,18 +62,18 @@ html {
   display: unset;
 }
 
-@media screen and (min-width: 636px) {
+@media screen and (min-width: 936px) {
   .nav-links {
-    margin-left: 5em;
     display: block;
-    position: static;
-    width: auto;
+    position: sticky;
+    width: fit-content;
     background: none;
-  }
+      }
 
   .nav-links a {
-    display: inline-block;
-    padding: 15px 20px;
+    display: inline-flex;
+    padding: 5px 5px;
+     Font-size: 16px;
   }
 
   .hamburger {
