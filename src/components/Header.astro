@@ -6,7 +6,7 @@ const platform = "github";
 const username = "withastro";
 const props = Astro.props;
 import Social from './Social.astro';
-import Container from './';
+import Container from './logo.astro';
 ---
 
 <style>
@@ -15,7 +15,7 @@ import Container from './';
     display: flex;
     justify-content: space-between; /* Распределяем элементы по ширине */
     align-items: center;
-        margin-top: 2rem;
+        margin-top: 0.5rem;
     flex-wrap: nowrap; /* Запрещаем перенос на новую строку */
   }
 
@@ -32,9 +32,8 @@ import Container from './';
 </style>
 
 <header>
-  <div class="container">
-    <a class="logo" href="/"></a>
-    <img src="../components/logo.png" alt="Логотип" width="40" height="40" />
+  <Container>
+     </Container>
   <nav>
     <Hamburger />
     <Navigation />

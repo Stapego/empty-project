@@ -4,14 +4,27 @@ const { class: additionalClass } = Astro.props;
 ---
 
 <style>
-  .container {
-    width: 100%;
-    max-width: var(--max-width, 1200px);
-    margin: 0 auto;
-    padding: 0 1rem;
+  @media (min-width: 640px) {
+    .container {
+      max-width: 640px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container {
+      max-width: 1024px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .container {
+      max-width: 1200px;
+    }
   }
 </style>
 
 <div class={`container ${additionalClass || ''}`}>
+  <a class="logo" href="#">
+    <img src="https://webkyrs.info/images/icon-128-white.png" width="70" height="70" alt="Мой БЛОГ">
   <slot />
 </div>
