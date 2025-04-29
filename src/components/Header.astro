@@ -23,6 +23,11 @@ import Social from './Social.astro';
     align-items: center;
     gap: 0.5rem;
   }
+  .logo {
+    /* Добавьте стили для логотипа по необходимости */
+    height: 2.5rem; /* Примерный размер */
+    margin-right: 1rem; /* Отступ от других элементов */
+  }
 </style>
 
 <header>
@@ -30,7 +35,16 @@ import Social from './Social.astro';
     <Hamburger />
     <Navigation />
   </nav>
+  <div class="logo">
+    <!-- Ваш логотип - можно использовать img или svg -->
+    <img src="/logo.svg" alt="Логотип" width="40" height="40" />
+    <!-- Или: -->
+    <!-- <svg class="logo" ...>...</svg> -->
+  </div>
   <Social />
     <ThemeIcon />
   </div>
+  <a href="/" class="logo">
+    <img src=".." alt="Логотип" width="40" height="40" />
+  </a>
 </header>
