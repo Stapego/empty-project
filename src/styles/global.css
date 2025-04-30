@@ -66,14 +66,19 @@ html {
   .nav-links {
     display: block;
     position: sticky;
-    width: fit-content;
+    width: 300px;
     background: none;
+    flex-wrap: nowrap;
       }
 
   .nav-links a {
-    display: inline-flex;
+    display: inline-block;
     padding: 5px 5px;
      Font-size: 16px;
+  }
+
+  .header-two {
+        float: right;
   }
 
   .hamburger {

@@ -18,10 +18,19 @@ import Container1 from './logo.astro';
     flex-wrap: nowrap; /* Запрещаем перенос на новую строку */
   }
      .container2 {
+    display: block;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    flex-wrap: nowrap;
+    }
+    .header-two {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
     margin-top: 0.5rem;
+    flex-wrap: nowrap;
+    justify-content: flex-end
     }
 </style>
 
@@ -31,7 +40,7 @@ import Container1 from './logo.astro';
   <nav>
        <Navigation />
   </nav>
-  <header class="header-two">
+  <header class="header-two"> <!-- второй блок заголовка -->
     <Container2 />
   </header>
        <ThemeIcon />
