@@ -9,6 +9,8 @@ html {
     max-width: 80ch;
     padding: 1rem;
     line-height: 1.5;
+    padding-top: 40px;
+    margin: 0;
   }
   
   * {
@@ -62,6 +64,8 @@ html {
 .expanded {
   display: unset;
 }
+
+
 
 @media screen and (min-width: 936px) {
   .nav-links {
