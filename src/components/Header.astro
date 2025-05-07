@@ -12,18 +12,19 @@ import Container1 from './logo.astro';
 <style>
   header {
     width: 100%;
+    max-width: fit-content;
+    margin: 0 auto;
     display: flex;
         align-items: center;
         font-family: 'TT Neoris Regular';
         font-weight: 100;
         position: fixed; /* Фиксирует хедер на экране */
   top: 0;          /* Прижимает к верхнему краю */
-  left: 0;         /* Прижимает к левому краю */
-  width: 100%;     /* Растягивает на всю ширину */
-  z-index: 1000;   /* Убедись, что хедер поверх других элементов */
-  background: #fff; /* Подбери подходящий фон */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Необязательно: тень для эффекта "плавающего" хедера */
-
+  
+  z-index: 1000;   /* хедер поверх других элементов */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* тень для эффекта "плавающего" хедера */
+/* Полупрозрачный тёмный фон (последнее значение — прозрачность от 0 до 1) */
+background: #acc2d7; /* цвет фона */
         
     flex-wrap: nowrap; /* Запрещаем перенос на новую строку */
       }
@@ -44,6 +45,7 @@ import Container1 from './logo.astro';
 </style>
 
 <header>
+  <Hamburger />
   <Container1>
      </Container1>
    
@@ -52,7 +54,7 @@ import Container1 from './logo.astro';
        <Navigation />
   </nav>
   
-    <Hamburger />
+    
     <header class="header-two"> <!-- соц иконки -->
   </header>
 
