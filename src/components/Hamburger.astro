@@ -65,7 +65,12 @@
 }
 .menu-list {
   top: 0;
-  left: -250px !important;
+  
+  
+  opacity: 0; /* Полностью прозрачно */
+  visibility: hidden; /* Скрыто от взаимодействия */
+  transition: opacity 0.3s, visibility 0.3s;
+
   position: absolute;
   display: grid;
   gap: 12px;
@@ -90,6 +95,9 @@
 }
 .hamburger-checkbox:checked ~ .menu-list {
   transform: translateX(0);
+  left: 0 !important;
+  opacity: 1;
+  visibility: visible;
 }
 .hamburger {
  
