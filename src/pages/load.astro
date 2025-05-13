@@ -1,7 +1,11 @@
 ---
-// src/pages/upload.astro
-import fs from 'fs/promises';
-import path from 'path';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Upload from '../components/upload.astro';
+
+
+// src/сomponents/upload.astro
+const props = Astro.props
+
 
 if (Astro.request.method === 'POST') {
   const formData = await Astro.request.formData();
@@ -15,14 +19,15 @@ if (Astro.request.method === 'POST') {
     const buffer = Buffer.from(await file.arrayBuffer());
     await fs.writeFile(filePath, buffer);
 
-    return Astro.redirect('/upload?success=1');
+    return Astro.redirect('/load?success=1');
   }
 }
----
 
-<html>
-<body>
-  <h1>Загрузка изображений</h1>
+
+const pageTitle = "Загрузка";
+---
+<BaseLayout>
+    <h1>Загрузка изображений</h1>
   
   <!-- Форма -->
   <form method="POST" enctype="multipart/form-data">
@@ -34,5 +39,5 @@ if (Astro.request.method === 'POST') {
   {Astro.url.searchParams.has('success') && (
     <p style="color: green;">Файл успешно загружен!</p>
   )}
-</body>
-</html>
+  </BaseLayout>
+  <Upload /

@@ -1,0 +1,38 @@
+---
+// src/сomponents/upload.astro
+import fs from 'fs/promises';
+import path from 'path';
+
+if (Astro.request.method === 'POST') {
+  const formData = await Astro.request.formData();
+  const file = formData.get('image');
+
+  if (file instanceof File && file.size > 0) {
+    const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+    await fs.mkdir(uploadsDir, { recursive: true });
+
+    const filePath = path.join(uploadsDir, file.name);
+    const buffer = Buffer.from(await file.arrayBuffer());
+    await fs.writeFile(filePath, buffer);
+
+    return Astro.redirect('/upload?success=1');
+  }
+}
+---
+
+<html>
+<body>
+  <h1>Загрузка изображений</h1>
+  
+  <!-- Форма -->
+  <form method="POST" enctype="multipart/form-data">
+    <input type="file" name="image" accept="image/*" required>
+    <button type="submit">Загрузить</button>
+  </form>
+
+  <!-- Сообщение об успехе -->
+  {Astro.url.searchParams.has('success') && (
+    <p style="color: green;">Файл успешно загружен!</p>
+  )}
+</body>
+</html>
