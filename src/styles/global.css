@@ -119,3 +119,7 @@ html.dark {
   background-color: #111112;
 }
 
+
+.dark .menu-list {
+  background: rgb(77, 53, 10);
+}
