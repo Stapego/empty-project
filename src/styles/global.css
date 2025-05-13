@@ -2,7 +2,15 @@ html {
     background-color: #acc2d7;
     font-family: 'TT Neoris Regular';
   }
-  
+  @font-face {
+    font-family: 'TT Neoris Regular';
+    src: url('../fonts/tt_neoris_regular.eot'); /* IE 9 Compatibility Mode */
+    src: url('../fonts/tt_neoris_regular.eot?#iefix') format('embedded-opentype'), /* IE < 9 */
+      url('../fonts/tt_neoris_regular.woff2') format('woff2'), /* Super Modern Browsers */
+      url('../fonts/tt_neoris_regular.woff') format('woff'), /* Firefox >= 3.6, any other modern browser */
+      url('../fonts/tt_neoris_regular.ttf') format('truetype'), /* Safari, Android, iOS */
+      url('../fonts/tt_neoris_regular.svg#tt_neoris_regular') format('svg'); /* Chrome < 4, Legacy iOS */
+  }
   body {
     
     margin: 0 auto;
@@ -75,6 +83,8 @@ html {
     width: 400px;
     background: none;
     flex-wrap: nowrap;
+    font-family: 'TT Neoris Regular';
+    
       }
 
       
@@ -94,22 +104,18 @@ html {
     display: none;
   }
 
-  @font-face {
-    font-family: 'TT Neoris Regular';
-    src: url('../fonts/tt_neoris_regular.eot'); /* IE 9 Compatibility Mode */
-    src: url('../fonts/tt_neoris_regular.eot?#iefix') format('embedded-opentype'), /* IE < 9 */
-      url('../fonts/tt_neoris_regular.woff2') format('woff2'), /* Super Modern Browsers */
-      url('../fonts/tt_neoris_regular.woff') format('woff'), /* Firefox >= 3.6, any other modern browser */
-      url('../fonts/tt_neoris_regular.ttf') format('truetype'), /* Safari, Android, iOS */
-      url('../fonts/tt_neoris_regular.svg#tt_neoris_regular') format('svg'); /* Chrome < 4, Legacy iOS */
-  }
+ 
 }
 html.dark {
-  background-color: #0d0950;
+  background-color: #111112; /* цвет фона темной темы*/
   color: #fff;
 }
 
 .dark .nav-links a {
   color: #fff;
+}
+
+.dark header {
+  background-color: #111112;
 }
 
