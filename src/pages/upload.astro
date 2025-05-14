@@ -1,0 +1,461 @@
+---
+// src/pages/upload.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+import fs from 'fs/promises';
+import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
+
+const pageTitle = "Загрузка изображений";
+
+// Конфигурация
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const UPLOADS_DIR = path.join(process.cwd(), 'public', 'uploads');
+const PREVIEW_COUNT = 12; // Количество изображений в галерее
+
+// Функция получения последних изображений
+async function getRecentImages() {
+  try {
+    await fs.mkdir(UPLOADS_DIR, { recursive: true }); // Создаем папку если нет
+    const files = await fs.readdir(UPLOADS_DIR);
+    
+    // Фильтрация и сортировка
+    const images = await Promise.all(
+      files.filter(file => {
+        const ext = path.extname(file).toLowerCase();
+        return ['.jpg', '.jpeg', '.png', '.webp'].includes(ext);
+      }).map(async file => {
+        const stat = await fs.stat(path.join(UPLOADS_DIR, file));
+        return {
+          name: file,
+          date: stat.mtime,
+          timestamp: stat.mtimeMs
+        };
+      })
+    );
+    
+    return images
+      .sort((a, b) => b.timestamp - a.timestamp)
+      .slice(0, PREVIEW_COUNT)
+      .map(img => img.name);
+      
+  } catch (error) {
+    console.error('Ошибка при чтении папки:', error);
+    return [];
+  }
+}
+
+let recentImages = await getRecentImages();
+
+// Обработка POST запроса
+if (Astro.request.method === 'POST') {
+  try {
+    const formData = await Astro.request.formData();
+    const file = formData.get('image');
+
+        
+    const fileExt = path.extname(file.name).toLowerCase();
+    if (!['.jpg', '.jpeg', '.png', '.webp', '.bmp'].includes(fileExt)) {
+      throw new Error('Допустимы только JPG, PNG и WebP');
+    }
+
+    // Генерация уникального имени
+    const uniqueName = `${uuidv4()}${fileExt}`;
+    const filePath = path.join(UPLOADS_DIR, uniqueName);
+
+    // Сохранение файла
+    const buffer = Buffer.from(await file.arrayBuffer());
+    await fs.writeFile(filePath, buffer);
+
+    // Обновляем список изображений
+    recentImages = await getRecentImages();
+    
+    // Редирект с параметрами
+    return Astro.redirect(`${Astro.url.pathname}?success=1&filename=${encodeURIComponent(uniqueName)}`);
+
+  } catch (error) {
+    return Astro.redirect(`${Astro.url.pathname}?error=${encodeURIComponent(error.message)}`);
+  }
+}
+
+const success = Astro.url.searchParams.get('success');
+const error = Astro.url.searchParams.get('error');
+const filename = Astro.url.searchParams.get('filename');
+---
+
+<BaseLayout title={pageTitle}>
+  <main class="upload-container">
+    <!-- Форма загрузки -->
+    <section class="upload-section">
+      <h1>{pageTitle}</h1>
+      
+      <form method="POST" enctype="multipart/form-data" class="upload-form">
+        <div class="form-group">
+          <input 
+            type="file" 
+            id="image" 
+            name="image" 
+            accept="image/*" 
+            required
+          >
+          <label for="image" class="file-label">
+            <span id="file-name">Выберите файл</span>
+            <span class="browse-btn">Обзор</span>
+          </label>
+          <p class="hint">Допустимые форматы: JPG, PNG, WebP (макс. 5MB)</p>
+        </div>
+        <button type="submit" class="submit-btn">Загрузить</button>
+      </form>
+
+      {success && (
+        <div class="alert success">
+          <p>Файл "{filename}" успешно загружен!</p>
+        </div>
+      )}
+      
+      {error && (
+        <div class="alert error">
+          <p>{error}</p>
+        </div>
+      )}
+    </section>
+
+    <!-- Галерея -->
+    <section class="gallery-section">
+      <h2>Последние загруженные ({recentImages.length})</h2>
+      
+      {recentImages.length > 0 ? (
+        <div class="gallery-grid">
+          {recentImages.map(image => (
+            <div class="gallery-item">
+              <div class="thumbnail-container">
+                <img 
+                  src={`/uploads/${image}`} 
+                  alt={image} 
+                  loading="lazy"
+                  class="thumbnail"
+                  onclick={`showFullImage('/uploads/${image}')`}
+                >
+                <div class="image-overlay">
+                  <span class="view-btn">Просмотр</span>
+                </div>
+              </div>
+              <div class="image-info">
+                <span class="filename">{image}</span>
+                <button 
+                  class="copy-btn"
+                  onclick={`copyImageUrl('/uploads/${image}')`}
+                  title="Копировать ссылку"
+                >
+                  📋
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p class="empty-gallery">Нет загруженных изображений</p>
+      )}
+    </section>
+  </main>
+
+  <!-- Модальное окно -->
+  <div id="image-modal" class="modal">
+    <span class="close-btn" onclick="closeModal()">&times;</span>
+    <img id="modal-image" class="modal-content">
+    <div class="modal-footer">
+      <a id="download-btn" download class="modal-btn">Скачать</a>
+      <button onclick="copyModalUrl()" class="modal-btn">Копировать URL</button>
+    </div>
+  </div>
+
+  <style>
+    :root {
+      --primary: #4361ee;
+      --error: #f72585;
+      --success: #4cc9f0;
+    }
+    
+    .upload-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+    
+    .upload-section {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 3rem;
+    }
+    
+    .upload-form {
+      margin-top: 1.5rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    input[type="file"] {
+      display: none;
+    }
+    
+    .file-label {
+      display: flex;
+      align-items: center;
+      border: 2px dashed #ddd;
+      padding: 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .file-label:hover {
+      border-color: var(--primary);
+    }
+    
+    #file-name {
+      flex-grow: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    .browse-btn {
+      background: var(--primary);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      margin-left: 1rem;
+    }
+    
+    .hint {
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 0.5rem;
+    }
+    
+    .submit-btn {
+      background: var(--primary);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+      width: 100%;
+    }
+    
+    .submit-btn:hover {
+      background: #3a56d4;
+    }
+    
+    .alert {
+      padding: 1rem;
+      border-radius: 4px;
+      margin-top: 1.5rem;
+    }
+    
+    .success {
+      background: rgba(76, 201, 240, 0.1);
+      border-left: 4px solid var(--success);
+    }
+    
+    .error {
+      background: rgba(247, 37, 133, 0.1);
+      border-left: 4px solid var(--error);
+    }
+    
+    /* Галерея */
+    .gallery-section {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    
+    .gallery-item {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+    
+    .gallery-item:hover {
+      transform: translateY(-5px);
+    }
+    
+    .thumbnail-container {
+      position: relative;
+      aspect-ratio: 1;
+      background: #f5f5f5;
+    }
+    
+    .thumbnail {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .image-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .thumbnail-container:hover .image-overlay {
+      opacity: 1;
+    }
+    
+    .view-btn {
+      color: white;
+      background: var(--primary);
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .image-info {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem;
+      background: white;
+    }
+    
+    .filename {
+      flex-grow: 1;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .copy-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-left: 0.5rem;
+    }
+    
+    .empty-gallery {
+      text-align: center;
+      color: #666;
+      padding: 2rem;
+    }
+    
+    /* Модальное окно */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      overflow: auto;
+    }
+    
+    .modal-content {
+      display: block;
+      max-width: 90%;
+      max-height: 80vh;
+      margin: 5vh auto;
+    }
+    
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: white;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+    
+    .modal-footer {
+      text-align: center;
+      padding: 1rem;
+    }
+    
+    .modal-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      margin: 0 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+
+  <script>
+    // Обработка выбора файла
+    document.getElementById('image').addEventListener('change', function(e) {
+      const fileName = e.target.files[0]?.name || 'Выберите файл';
+      document.getElementById('file-name').textContent = fileName;
+    });
+
+    // Функции для модального окна
+    function showFullImage(src) {
+      const modal = document.getElementById('image-modal');
+      const modalImg = document.getElementById('modal-image');
+      const downloadBtn = document.getElementById('download-btn');
+      
+      modal.style.display = 'block';
+      modalImg.src = src;
+      downloadBtn.href = src;
+    }
+
+    function closeModal() {
+      document.getElementById('image-modal').style.display = 'none';
+    }
+
+    function copyModalUrl() {
+      const imgSrc = document.getElementById('modal-image').src;
+      navigator.clipboard.writeText(imgSrc)
+        .then(() => alert('Ссылка скопирована!'))
+        .catch(err => console.error('Ошибка копирования:', err));
+    }
+
+    function copyImageUrl(url) {
+      navigator.clipboard.writeText(window.location.origin + url)
+        .then(() => alert('Ссылка скопирована!'))
+        .catch(err => console.error('Ошибка копирования:', err));
+      event.stopPropagation();
+    }
+
+    // Закрытие по клику вне изображения
+    window.onclick = function(event) {
+      const modal = document.getElementById('image-modal');
+      if (event.target === modal) {
+        closeModal();
+      }
+    };
+
+    // Обновление страницы после успешной загрузки
+    if (new URLSearchParams(window.location.search).has('success')) {
+      setTimeout(() => {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }, 3000);
+    }
+  </script>
+</BaseLayout>
